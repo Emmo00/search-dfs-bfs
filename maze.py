@@ -96,7 +96,7 @@ class Maze:
         self.maze_walls = row_walls
 
     def print(self):
-        optimal_path = self.optimal_path()
+        solution_path = self.solution_path()
         map = ""
         for i, row in enumerate(self.maze_walls):
             for j, pixel in enumerate(row):
@@ -106,8 +106,8 @@ class Maze:
                     map = map + "A"
                 elif (i, j) == self.goal:
                     map = map + "B"
-                elif optimal_path and any(
-                    node.state == (i, j) for node in optimal_path
+                elif solution_path and any(
+                    node.state == (i, j) for node in solution_path
                 ):
                     map = map + "\033[92m*\033[0m"
                 elif self.solution and any(
@@ -118,7 +118,6 @@ class Maze:
                     map = map + (" ")
             map = map + "\n"
         return map
-
 
     def neighbors(self, node: Node) -> list[Node]:
         x, y = node.state
@@ -168,12 +167,10 @@ class Maze:
             print(frame)
             sleep(0.011)
 
-    def optimal_path(self):
+    def solution_path(self):
         goal = self.solution[-1]
         o_path = [goal]
-        for node in reversed(
-            self.solution[:-1]
-        ):  
+        for node in reversed(self.solution[:-1]):
             g_x, g_y = goal.state
             x, y = node.state
             if (x == g_x - 1 or x == g_x + 1 or x == g_x) and (
